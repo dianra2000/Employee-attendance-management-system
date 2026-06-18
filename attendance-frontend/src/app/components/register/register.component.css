@@ -1,0 +1,12 @@
+@import '../login/login.component.css';
+
+.success-alert {
+  background-color: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  color: #6ee7b7;
+  padding: 1rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  text-align: center;
+  animation: slideUp 0.5s ease-out;
+}
