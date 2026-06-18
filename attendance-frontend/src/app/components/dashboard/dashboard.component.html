@@ -1,0 +1,75 @@
+<div class="dashboard-container">
+  <nav class="glass-card navbar">
+    <div class="nav-brand">
+      <div class="logo-icon">EA</div>
+      <h2>Attendance Portal</h2>
+    </div>
+    <div class="nav-user">
+      <span>Welcome, {{ currentUser?.username }}</span>
+      <button class="btn-logout" (click)="logout()">Logout</button>
+    </div>
+  </nav>
+
+  <div class="dashboard-content">
+    <div class="glass-card action-card">
+      <div class="action-header">
+        <h3>Daily Attendance</h3>
+        <p>Record your time for today</p>
+      </div>
+      
+      <div class="error-alert" *ngIf="errorMessage" style="margin-bottom: 1rem;">
+        {{ errorMessage }}
+      </div>
+
+      <div class="action-buttons">
+        <button class="btn-primary btn-checkin" (click)="checkIn()" [disabled]="isCheckingIn">
+          <span *ngIf="isCheckingIn" class="spinner"></span>
+          <span *ngIf="!isCheckingIn">CHECK IN</span>
+        </button>
+        
+        <button class="btn-primary btn-checkout" (click)="checkOut()" [disabled]="isCheckingOut">
+          <span *ngIf="isCheckingOut" class="spinner"></span>
+          <span *ngIf="!isCheckingOut">CHECK OUT</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="glass-card table-card">
+      <div class="table-header">
+        <h3>My Attendance History</h3>
+      </div>
+      
+      <div class="table-responsive">
+        <table class="attendance-table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Status</th>
+              <th>Check In Time</th>
+              <th>Check Out Time</th>
+              <th>Work Hours</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let log of attendanceLogs">
+              <td>{{ log.date }}</td>
+              <td>
+                <span class="status-badge" [ngClass]="log.status.toLowerCase()">
+                  {{ log.status }}
+                </span>
+              </td>
+              <td>{{ log.checkInTime | date:'shortTime' || 'N/A' }}</td>
+              <td>{{ log.checkOutTime | date:'shortTime' || 'Pending...' }}</td>
+              <td>{{ log.workHours ? log.workHours + ' hrs' : '-' }}</td>
+            </tr>
+            <tr *ngIf="attendanceLogs.length === 0">
+              <td colspan="5" style="text-align: center; padding: 2rem; color: var(--text-secondary);">
+                No attendance records found.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
