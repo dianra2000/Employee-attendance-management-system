@@ -1,0 +1,109 @@
+<div class="dashboard-container">
+  <!-- Navbar -->
+  <nav class="glass-card navbar">
+    <div class="nav-brand">
+      <div class="logo-icon">EA</div>
+      <h2>Attendance Portal</h2>
+    </div>
+    <div class="nav-links">
+      <a routerLink="/dashboard" class="nav-link">📊 Dashboard</a>
+      <a routerLink="/leave" class="nav-link active">📝 Leave</a>
+    </div>
+    <div class="nav-user">
+      <span>Welcome, {{ currentUser?.username }}</span>
+      <button class="btn-logout" (click)="logout()">Logout</button>
+    </div>
+  </nav>
+
+  <div class="dashboard-content">
+
+    <!-- Apply Leave Form -->
+    <div class="glass-card action-card">
+      <div class="action-header">
+        <h3>📝 Apply for Leave</h3>
+        <p>Submit a new leave request</p>
+      </div>
+
+      <div *ngIf="errorMessage" class="alert-error">
+        ⚠️ {{ errorMessage }}
+      </div>
+      <div *ngIf="successMessage" class="alert-success">
+        ✅ {{ successMessage }}
+      </div>
+
+      <form (ngSubmit)="submitLeave()" class="leave-form">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="leaveType">Leave Type *</label>
+            <select id="leaveType" [(ngModel)]="leaveForm.leaveType" name="leaveType" class="form-control">
+              <option value="ANNUAL">Annual Leave</option>
+              <option value="CASUAL">Casual Leave</option>
+              <option value="SICK">Sick Leave</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="startDate">Start Date *</label>
+            <input id="startDate" type="date" [(ngModel)]="leaveForm.startDate" name="startDate" class="form-control" required />
+          </div>
+
+          <div class="form-group">
+            <label for="endDate">End Date *</label>
+            <input id="endDate" type="date" [(ngModel)]="leaveForm.endDate" name="endDate" class="form-control" required />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="reason">Reason *</label>
+          <textarea id="reason" [(ngModel)]="leaveForm.reason" name="reason" class="form-control" rows="3"
+            placeholder="Please provide a reason for your leave..." required></textarea>
+        </div>
+
+        <button type="submit" class="btn-submit" [disabled]="isSubmitting">
+          <span *ngIf="isSubmitting" class="spinner"></span>
+          <span *ngIf="!isSubmitting">Submit Leave Request</span>
+        </button>
+      </form>
+    </div>
+
+    <!-- Leave History Table -->
+    <div class="glass-card table-card">
+      <div class="table-header">
+        <h3>📋 My Leave History</h3>
+      </div>
+
+      <div class="table-responsive">
+        <table class="attendance-table">
+          <thead>
+            <tr>
+              <th>Leave Type</th>
+              <th>Start Date</th>
+              <th>End Date</th>
+              <th>Reason</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let leave of leaveHistory">
+              <td>{{ leave.leaveType }}</td>
+              <td>{{ leave.startDate }}</td>
+              <td>{{ leave.endDate }}</td>
+              <td>{{ leave.reason }}</td>
+              <td>
+                <span class="status-badge" [ngClass]="getStatusClass(leave.status)">
+                  {{ leave.status }}
+                </span>
+              </td>
+            </tr>
+            <tr *ngIf="leaveHistory.length === 0">
+              <td colspan="5" style="text-align: center; padding: 2rem; color: var(--text-secondary);">
+                No leave requests found.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>

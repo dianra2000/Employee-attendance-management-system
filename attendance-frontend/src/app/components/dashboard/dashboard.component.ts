@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { AttendanceService } from '../../services/attendance.service';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
 })
@@ -15,6 +15,7 @@ export class DashboardComponent implements OnInit {
   currentUser: any;
   attendanceLogs: any[] = [];
   errorMessage = '';
+  successMessage = '';
   isCheckingIn = false;
   isCheckingOut = false;
 
@@ -29,7 +30,6 @@ export class DashboardComponent implements OnInit {
       this.router.navigate(['/login']);
       return;
     }
-
     this.currentUser = this.authService.getUser();
     this.loadAttendanceLogs();
   }
@@ -38,22 +38,26 @@ export class DashboardComponent implements OnInit {
     this.attendanceService.getMyAttendance().subscribe({
       next: data => {
         this.attendanceLogs = data;
+        this.errorMessage = '';
       },
       error: err => {
-        this.errorMessage = err.error.message || 'Failed to load attendance logs';
+        this.errorMessage = this.getErrorMessage(err, 'Failed to load attendance logs');
       }
     });
   }
 
   checkIn(): void {
     this.isCheckingIn = true;
+    this.errorMessage = '';
+    this.successMessage = '';
     this.attendanceService.checkIn().subscribe({
-      next: data => {
+      next: () => {
         this.isCheckingIn = false;
+        this.successMessage = 'Checked in successfully!';
         this.loadAttendanceLogs();
       },
       error: err => {
-        this.errorMessage = err.error.message || 'Failed to check in';
+        this.errorMessage = this.getErrorMessage(err, 'Failed to check in');
         this.isCheckingIn = false;
       }
     });
@@ -61,21 +65,29 @@ export class DashboardComponent implements OnInit {
 
   checkOut(): void {
     this.isCheckingOut = true;
+    this.errorMessage = '';
+    this.successMessage = '';
     this.attendanceService.checkOut().subscribe({
-      next: data => {
+      next: () => {
         this.isCheckingOut = false;
+        this.successMessage = 'Checked out successfully!';
         this.loadAttendanceLogs();
       },
       error: err => {
-        this.errorMessage = err.error.message || 'Failed to check out';
+        this.errorMessage = this.getErrorMessage(err, 'Failed to check out');
         this.isCheckingOut = false;
       }
     });
   }
 
+  private getErrorMessage(err: any, fallback: string): string {
+    if (typeof err.error === 'string') return err.error;
+    if (err.error?.message) return err.error.message;
+    if (err.message) return err.message;
+    return fallback;
+  }
+
   logout(): void {
-    this.authService.saveToken('');
-    this.authService.saveUser(null);
     window.sessionStorage.clear();
     this.router.navigate(['/login']);
   }

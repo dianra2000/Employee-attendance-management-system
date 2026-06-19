@@ -4,6 +4,10 @@
       <div class="logo-icon">EA</div>
       <h2>Attendance Portal</h2>
     </div>
+    <div class="nav-links">
+      <a routerLink="/dashboard" class="nav-link active">📊 Dashboard</a>
+      <a routerLink="/leave" class="nav-link">📝 Leave</a>
+    </div>
     <div class="nav-user">
       <span>Welcome, {{ currentUser?.username }}</span>
       <button class="btn-logout" (click)="logout()">Logout</button>
@@ -17,8 +21,12 @@
         <p>Record your time for today</p>
       </div>
       
-      <div class="error-alert" *ngIf="errorMessage" style="margin-bottom: 1rem;">
-        {{ errorMessage }}
+      <div class="error-alert" *ngIf="errorMessage" style="margin-bottom: 1rem; background: rgba(239,68,68,0.15); border: 1px solid rgba(239,68,68,0.4); padding: 0.75rem 1rem; border-radius: 8px; color: #fca5a5;">
+        ⚠️ {{ errorMessage }}
+      </div>
+
+      <div *ngIf="successMessage" style="margin-bottom: 1rem; background: rgba(34,197,94,0.15); border: 1px solid rgba(34,197,94,0.4); padding: 0.75rem 1rem; border-radius: 8px; color: #86efac;">
+        ✅ {{ successMessage }}
       </div>
 
       <div class="action-buttons">
