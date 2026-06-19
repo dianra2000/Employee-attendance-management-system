@@ -43,7 +43,7 @@ export class LoginComponent {
         this.router.navigate(['/dashboard']);
       },
       error: err => {
-        this.errorMessage = err.error.message || 'Login failed! Please check your credentials.';
+        this.errorMessage = err.error?.message || 'Login failed! Please ensure the backend server is running.';
         this.isLoginFailed = true;
         this.isLoading = false;
       }
