@@ -58,8 +58,8 @@
                   {{ log.status }}
                 </span>
               </td>
-              <td>{{ log.checkInTime | date:'shortTime' || 'N/A' }}</td>
-              <td>{{ log.checkOutTime | date:'shortTime' || 'Pending...' }}</td>
+              <td>{{ log.checkInTime ? (log.checkInTime | date:'shortTime') : 'N/A' }}</td>
+              <td>{{ log.checkOutTime ? (log.checkOutTime | date:'shortTime') : 'Pending...' }}</td>
               <td>{{ log.workHours ? log.workHours + ' hrs' : '-' }}</td>
             </tr>
             <tr *ngIf="attendanceLogs.length === 0">
